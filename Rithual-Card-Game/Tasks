@@ -1,0 +1,9 @@
+Front end tasks
+
+note: Battlefield component takes care of the cards that you place to atack the enemy
+YourCards component is where
+
+- make the cards appear in its right spots when dropped from the YourHand component
+- make the enemys battlefield work with thee cards too, for test, we can put any card there
+- make the atacking system work, so when i point from my card to an enemy one, i throw a function linking the front and the back end
+- render the card
