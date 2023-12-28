@@ -1,4 +1,6 @@
 // roomHandlers.js
+import { startGameAndDistributeCards } from "../allCards/shuffledCards.js";
+import { initializeTurnLogic } from "./turns.js";
 
 export const handleCreateRoom = (socket, io, activeRooms) => {
   socket.on("create room", () => {
@@ -17,6 +19,11 @@ export const handleJoinRoom = (socket, io, activeRooms) => {
       activeRooms[roomId].occupants++;
       activeRooms[roomId].players.push(socket.id);
       socket.join(roomId);
+
+      if (activeRooms[roomId].occupants === 2) {
+        startGameAndDistributeCards(io, roomId);
+        initializeTurnLogic(roomId, activeRooms, io);
+      }
 
       // Broadcast to the room that a new player has joined
       socket.to(roomId).emit("player joined", socket.id);

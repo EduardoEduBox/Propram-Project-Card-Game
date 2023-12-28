@@ -25,7 +25,7 @@ class CardStructure {
   };
 }
 
-const allCards = [
+export const cards = [
   new CardStructure(
     "The incredible Boila Ranger",
     "https://cdn.discordapp.com/attachments/421344962303623189/1167420560100307044/image.png?ex=654e101f&is=653b9b1f&hm=9fd7dac31704d926d07c83c44100eb580746f3f74628db3819da76c2eaa30df9&",

@@ -7,7 +7,7 @@ class Spell {
   }
 }
 
-const spells = [
+export const spells = [
   new Spell(
     "Speaking to the crowd",
     0,
