@@ -55,57 +55,6 @@ class CardStructure {
   };
 }
 
-class SpellCardStructure {
-  // Class properties with accessibility modifiers
-  public name: string;
-  public illustration: string;
-  public price: number;
-  public effect?: {
-    name: string;
-    function: () => void;
-    description: string;
-    illustration: string;
-  };
-
-  // Constructor with parameter properties
-  constructor(
-    name: string,
-    illustration: string,
-    price: number,
-    effect?: {
-      name: string;
-      function: () => void;
-      description: string;
-      illustration: string;
-    }
-  ) {
-    this.name = name;
-    this.illustration = illustration;
-    this.price = price;
-    this.effect = effect;
-  }
-
-  // normal effect for D20
-
-  static NORMAL = {
-    name: "Roll",
-  };
-
-  // card effects functions
-
-  static BOILA_RANGER = {
-    name: "Fear",
-    function: () => {
-      console.log(
-        "Boi laranja is too powerful for the enemies!, Fear: all enemies take double the damage while Boila Ranger is alive"
-      );
-    },
-    description:
-      "Boi laranja is too powerful for the enemies!, Fear: all enemies take double the damage while Boila Ranger is alive",
-    illustration: "hãn? como assim?",
-  };
-}
-
 export const allCards = [
   new CardStructure(
     "The incredible Boila Ranger",

@@ -3,10 +3,16 @@ import gsap from "gsap";
 import { allCards } from "../../allCards/cards";
 import { CardStructure } from "../Cards/Card";
 import CardComponent from "../Cards/CardComponent";
+import { useDeck } from "../../context/DeckContext";
 
 const YourHand: React.FC = () => {
   const [hand, setHand] = useState<CardStructure[]>([]);
   const handRef = useRef<HTMLDivElement>(null);
+
+  const handlePlayCard = (cardIndex: number) => {
+    const deckContext = useDeck();
+    deckContext.playCardFromHand(cardIndex);
+  };
 
   useEffect(() => {
     const initialHand = allCards.sort(() => 0.5 - Math.random()).slice(0, 5);
@@ -58,6 +64,7 @@ const YourHand: React.FC = () => {
           card={card}
           index={index}
           style={{ bottom: `${index * 5}px`, zIndex: index }}
+          onBeginDrag={() => handlePlayCard(index)} // You'll need to implement onBeginDrag prop in CardComponent
         />
       ))}
     </div>

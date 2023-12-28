@@ -9,12 +9,12 @@ import { CardStructure } from "./Cards/Card";
 
 const BuyCards: React.FC = () => {
   const { influence, setInfluence } = useInfluence();
-  const { addCardToHand, discardPile } = useDeck(); // Use addCardToDeck from DeckContext
+  const { addCardToDiscardPile, discardPile } = useDeck(); // Use addCardToDeck from DeckContext
 
   const buyCard = (card: CardStructure) => {
     if (influence >= card.price) {
       setInfluence(influence - card.price); // Subtract card price from energy
-      addCardToHand(card); // Add the card to the deck using DeckContext
+      addCardToDiscardPile(card); // Add the card to the deck using DeckContext
       // You might want to remove the card from the available cards to buy
       console.log(discardPile);
     } else {

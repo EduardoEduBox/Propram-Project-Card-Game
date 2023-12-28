@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDrop } from "react-dnd";
-import CardComponent from "../Cards/CardComponent";
+import Card from "../Cards/Card";
 
 const Battlefield = () => {
   const ItemTypes = {
@@ -9,10 +9,12 @@ const Battlefield = () => {
 
   const [slots, setSlots] = useState([null, null, null, null, null]); // State to track cards in slots
 
-  const handleCardDrop = (slotIndex: any, card: any) => {
-    const newSlots = [...slots];
-    newSlots[slotIndex] = card;
-    setSlots(newSlots);
+  const handleCardDrop = (slotIndex: number, droppedCard: any) => {
+    setSlots((prevSlots) => {
+      const newSlots = [...prevSlots];
+      newSlots[slotIndex] = droppedCard; // Only update the dropped slot
+      return newSlots;
+    });
   };
 
   const slotComponents = slots.map((slot, index) => {
@@ -28,9 +30,9 @@ const Battlefield = () => {
       <div
         key={index}
         ref={drop}
-        className="flex items-center justify-center rounded h-4/6 aspect-5/7 bg-stone-800" // Adjusted CSS for proper sizing and centering
+        className="relative flex items-center justify-center text-xs rounded h-4/6 aspect-5/7 bg-stone-800" // Adjusted CSS for proper sizing and centering
       >
-        {slot && <CardComponent card={slot} />}
+        {slot && <Card card={slot} />}
       </div>
     );
   });

@@ -1,7 +1,7 @@
 Front end tasks
 
 note: Battlefield component takes care of the cards that you place to atack the enemy
-YourCards component is where
+YourCards component is where the cards will appear after you shuffle the discard pile
 
 - make the cards appear in its right spots when dropped from the YourHand component
 - make the enemys battlefield work with thee cards too, for test, we can put any card there

@@ -8,16 +8,17 @@ interface CardComponentProps {
   card: CardStructure;
   index?: number;
   style?: CSSProperties; // Optional style prop
+  onBeginDrag?: () => void; // Optional onBeginDrag prop
 }
 
 const CardComponent: React.FC<CardComponentProps> = ({
   card,
-  index,
   style,
+  onBeginDrag,
 }) => {
   const [{ isDragging }, dragRef] = useDrag(() => ({
-    type: "card", // Define the drag type as 'card'
-    item: { id: index }, // You can pass the index or any unique identifier of the card
+    type: "card",
+    item: { ...card }, // Pass the entire card object when dragging
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),

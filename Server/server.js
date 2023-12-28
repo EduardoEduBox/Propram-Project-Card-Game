@@ -26,6 +26,12 @@ io.on("connection", (socket) => {
   handleCreateRoom(socket, io, activeRooms);
   handleJoinRoom(socket, io, activeRooms);
 
+  // handle game logic by implementing the turns for each player using socket.io
+  socket.on("turn", (turn) => {
+    // Broadcast the turn to the other player
+    socket.to(turn.roomId).emit("turn", turn);
+  });
+
   // Handle disconnection
   socket.on("disconnect", () => {
     // Remove the room if the creator leaves
