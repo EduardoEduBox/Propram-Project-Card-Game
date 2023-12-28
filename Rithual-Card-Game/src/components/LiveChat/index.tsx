@@ -16,21 +16,21 @@ interface LiveChatProps {
 }
 
 const LiveChat: React.FC<LiveChatProps> = ({ roomId }) => {
-  console.log("Room ID in LiveChat:", roomId);
+  // console.log("Room ID in LiveChat:", roomId);
 
   const [messages, setMessages] = useState<Message[]>([]);
   const socket = useSocket();
   const { user } = UserAuth();
 
-  useEffect(() => {
-    console.log("Here is the messages array:", messages);
-  }, [messages]);
+  // useEffect(() => {
+  //   console.log("Here is the messages array:", messages);
+  // }, [messages]);
 
   useEffect(() => {
     if (socket && roomId) {
       socket.on("chat message", ({ message }) => {
         // Destructure to get the actual message object
-        console.log("New message received:", message);
+        // console.log("New message received:", message);
         setMessages((prevMessages) => [...prevMessages, message]);
       });
 
@@ -52,7 +52,7 @@ const LiveChat: React.FC<LiveChatProps> = ({ roomId }) => {
           user?.photoURL ||
           "https://cdn.discordapp.com/attachments/421344962303623189/1187062902788739082/9712f93f38758e5bf4318d338a8b64c7.png",
       };
-      console.log("Sending message:", newMessage);
+      // console.log("Sending message:", newMessage);
       socket.emit("chat message", { message: newMessage, roomId });
     }
   };

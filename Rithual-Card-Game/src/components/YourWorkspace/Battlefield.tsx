@@ -38,7 +38,7 @@ const Battlefield = () => {
   });
 
   return (
-    <div className="battlefield bg-red-950 w-full flex justify-center gap-4 absolute h-[35%] border-t bottom-[20%] pt-5">
+    <div className="battlefield w-full flex justify-center gap-4 absolute h-[35%] border-t bottom-[20%] pt-5">
       {slotComponents}
     </div>
   );

@@ -2,6 +2,7 @@ import { Server } from "socket.io";
 import { instrument } from "@socket.io/admin-ui";
 import { handleChatMessage } from "./socketHandlers/chatMessages.js";
 import { handleCreateRoom, handleJoinRoom } from "./socketHandlers/rooms.js";
+import { TurnManager } from "./socketHandlers/turns.js";
 
 const io = new Server(3000, {
   cors: {
@@ -13,6 +14,9 @@ const io = new Server(3000, {
 
 // Store active rooms
 let activeRooms = {};
+
+// Create a single instance of TurnManager
+const turnManager = new TurnManager(io);
 
 io.on("connection", (socket) => {
   console.log(`New client connected, ID: ${socket.id}`);

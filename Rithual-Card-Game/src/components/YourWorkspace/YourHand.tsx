@@ -64,7 +64,6 @@ const YourHand: React.FC = () => {
           card={card}
           index={index}
           style={{ bottom: `${index * 5}px`, zIndex: index }}
-          onBeginDrag={() => handlePlayCard(index)} // You'll need to implement onBeginDrag prop in CardComponent
         />
       ))}
     </div>

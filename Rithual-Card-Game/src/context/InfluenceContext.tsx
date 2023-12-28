@@ -18,7 +18,7 @@ interface InfluenceContextProviderProps {
 export const EnergyContextProvider: FC<InfluenceContextProviderProps> = ({
   children,
 }) => {
-  const [influence, setInfluence] = useState<number>(100);
+  const [influence, setInfluence] = useState<number>(0);
   const [value, setValue] = useState<number>(1);
 
   return (

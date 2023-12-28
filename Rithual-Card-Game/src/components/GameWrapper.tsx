@@ -8,7 +8,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 const GameWrapper: React.FC = () => {
   // Use the Params type with useParams
   const { roomId } = useParams();
-  console.log("Room ID in GameWrapper:", roomId);
+  // console.log("Room ID in GameWrapper:", roomId);
 
   return (
     <DndProvider backend={HTML5Backend}>
