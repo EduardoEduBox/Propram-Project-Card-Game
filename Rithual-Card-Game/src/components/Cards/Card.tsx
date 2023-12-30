@@ -21,6 +21,9 @@ type CardProps = {
 };
 
 const Card: React.FC<CardProps> = ({ card }) => {
+  const isCardAnAlly =
+    card.hasOwnProperty("damage") && card.hasOwnProperty("health");
+
   return (
     <div
       className="w-full overflow-hidden leading-3 transition-shadow rounded-md aspect-5/7 shadow-card shadow-stone-800 hover:shadow-purple-600"
@@ -48,12 +51,16 @@ const Card: React.FC<CardProps> = ({ card }) => {
         }}
       ></div>
       <div className="relative flex w-full h-2/6 bg-stone-500">
-        <div className="absolute flex items-center justify-center w-1/3 text-base font-bold text-red-500 aspect-square bg-stone-700 rounded-br-3xl">
-          {card.damage}
-        </div>
-        <div className="absolute bottom-0 right-0 flex items-center justify-center w-1/3 ml-auto text-base font-bold text-green-500 aspect-square rounded-tl-3xl bg-stone-700">
-          {card.health}
-        </div>
+        {isCardAnAlly && (
+          <>
+            <div className="flex items-center justify-center w-1/3 text-base font-bold text-red-500 aspect-square bg-stone-700 rounded-br-3xl">
+              {card.damage}
+            </div>
+            <div className="flex items-center justify-center w-1/3 ml-auto text-base font-bold text-green-500 aspect-square rounded-tl-3xl bg-stone-700">
+              {card.health}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

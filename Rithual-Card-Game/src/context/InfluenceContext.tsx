@@ -1,35 +1,49 @@
-import { createContext, useContext, useState, ReactNode, FC } from "react";
+// InfluenceContext.tsx
+import {
+  createContext,
+  useEffect,
+  useContext,
+  useState,
+  ReactNode,
+  FC,
+} from "react";
+import { useSocket } from "./SocketContext"; // Import useSocket
 
 interface InfluenceContextProps {
   influence: number;
-  setInfluence: (influence: number) => void;
-  value: number;
-  setValue: (value: number) => void;
+  setInfluence: React.Dispatch<React.SetStateAction<number>>;
+  updateInfluence: (amount: number) => void; // New function to update influence
 }
 
 const InfluenceContext = createContext<InfluenceContextProps | undefined>(
   undefined
 );
 
-interface InfluenceContextProviderProps {
-  children: ReactNode;
-}
-
-export const EnergyContextProvider: FC<InfluenceContextProviderProps> = ({
+export const InfluenceContextProvider: FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [influence, setInfluence] = useState<number>(0);
-  const [value, setValue] = useState<number>(1);
+  const socket = useSocket();
+
+  // Function to update influence - sends a message to the backend
+  const updateInfluence = (amount: number) => {
+    socket?.emit("update influence", amount);
+  };
+
+  // Listening for influence updates from the backend
+  useEffect(() => {
+    socket?.on("influence updated", (newInfluence: number) => {
+      setInfluence(newInfluence);
+    });
+
+    return () => {
+      socket?.off("influence updated");
+    };
+  }, [socket]);
 
   return (
     <InfluenceContext.Provider
-      value={{
-        influence,
-        setInfluence,
-        value,
-        setValue,
-        // Remove the deck and addCardToDeck as they are now part of DeckContext
-      }}
+      value={{ influence, setInfluence, updateInfluence }}
     >
       {children}
     </InfluenceContext.Provider>
@@ -40,7 +54,7 @@ export const useInfluence = () => {
   const context = useContext(InfluenceContext);
   if (!context) {
     throw new Error(
-      "useInfluence must be used within a InfluenceContextProvider"
+      "useInfluence must be used within an InfluenceContextProvider"
     );
   }
   return context;

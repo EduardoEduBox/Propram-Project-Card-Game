@@ -23,6 +23,14 @@ export const handleJoinRoom = (socket, io, activeRooms) => {
       if (activeRooms[roomId].occupants === 2) {
         startGameAndDistributeCards(io, roomId);
         initializeTurnLogic(roomId, activeRooms, io);
+
+        socket.on("send user photo", ({ roomId, photoURL }) => {
+          // Forward the photo URL to the other player in the room
+          const enemyId = activeRooms[roomId].players.find(
+            (id) => id !== socket.id
+          );
+          io.to(enemyId).emit("enemy profile", { photoURL, id: socket.id });
+        });
       }
 
       // Broadcast to the room that a new player has joined

@@ -1,27 +1,42 @@
 class Spell {
-  constructor(name, cost, illustration, effect) {
+  constructor(name, price, illustration, effect) {
     this.name = name;
-    this.cost = cost;
+    this.price = price;
     this.illustration = illustration;
     this.effect = effect;
   }
 }
 
+const speakingToTheCrowd = new Spell(
+  "Speaking to the crowd",
+  0,
+  "https://cdn.discordapp.com/attachments/421344962303623189/1189985550296428664/file-LDnHEz49L1A3Veeklo1Bj1Tr.png?ex=65a02768&is=658db268&hm=3aa57f8cd1410c89eb39d4e64a614cc70e985e48c3bf30de9a7e933c66176d0b&",
+  {
+    name: "Influence",
+    description: "Gain 1 influence",
+    illustration: "",
+    function: () => {
+      // returning 1 influence
+      return 1;
+    },
+  }
+);
+
 export const spells = [
-  new Spell(
-    "Speaking to the crowd",
-    0,
-    "https://cdn.discordapp.com/attachments/421344962303623189/1189985550296428664/file-LDnHEz49L1A3Veeklo1Bj1Tr.png?ex=65a02768&is=658db268&hm=3aa57f8cd1410c89eb39d4e64a614cc70e985e48c3bf30de9a7e933c66176d0b&",
-    {
-      name: "Influence",
-      description: "Gain 1 influence",
-      illustration: "",
-      function: () => {
-        // returning 1 influence
-        return 1;
-      },
-    }
-  ),
+  speakingToTheCrowd,
+  speakingToTheCrowd,
+  speakingToTheCrowd,
+  speakingToTheCrowd,
+  speakingToTheCrowd,
+  speakingToTheCrowd,
+  speakingToTheCrowd,
+  speakingToTheCrowd,
+  speakingToTheCrowd,
+  speakingToTheCrowd,
+  speakingToTheCrowd,
+  speakingToTheCrowd,
+  speakingToTheCrowd,
+  speakingToTheCrowd, // 14
   new Spell(
     "Healing potion",
     1,

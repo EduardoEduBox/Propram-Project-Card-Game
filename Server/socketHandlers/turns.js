@@ -9,5 +9,5 @@ export function initializeTurnLogic(roomId, activeRooms, io) {
       const isCurrentPlayer = index === currentPlayerIndex;
       io.to(playerSocketId).emit("turn", { isYourTurn: isCurrentPlayer });
     });
-  }, 10000); // Switch turn every 10 seconds
+  }, 60000); // Switch turn every 60 seconds
 }

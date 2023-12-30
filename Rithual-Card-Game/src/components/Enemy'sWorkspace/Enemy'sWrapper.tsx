@@ -2,10 +2,15 @@ import React from "react";
 import EnemysProfile from "./Enemy'sProfile";
 import EnemysBattlefield from "./Enemy'sBattlefield";
 
-const EnemysWrapper: React.FC = () => {
+type isMyTurnType = {
+  isMyTurnProp: boolean;
+  roomId: string;
+};
+
+const EnemysWrapper: React.FC<isMyTurnType> = ({ isMyTurnProp, roomId }) => {
   return (
     <section className="w-full absolute h-[45%] top-0 flex flex-col">
-      <EnemysProfile />
+      <EnemysProfile isMyTurnProp={isMyTurnProp} roomId={roomId} />
       <EnemysBattlefield />
     </section>
   );

@@ -9,11 +9,6 @@ const YourHand: React.FC = () => {
   const [hand, setHand] = useState<CardStructure[]>([]);
   const handRef = useRef<HTMLDivElement>(null);
 
-  const handlePlayCard = (cardIndex: number) => {
-    const deckContext = useDeck();
-    deckContext.playCardFromHand(cardIndex);
-  };
-
   useEffect(() => {
     const initialHand = allCards.sort(() => 0.5 - Math.random()).slice(0, 5);
     setHand(initialHand);

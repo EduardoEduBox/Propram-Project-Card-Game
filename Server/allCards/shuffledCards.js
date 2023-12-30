@@ -20,6 +20,11 @@ export function startGameAndDistributeCards(io, roomId) {
   // Take the first 5 cards/spells after shuffling
   const cardsToDistribute = combinedDeck.slice(0, 5);
 
+  console.log(`Distributing cards to room ${roomId}:`, cardsToDistribute); // Log the cards being distributed
+
   // Emit the cards to both players in the room
-  io.in(roomId).emit("cards distribution", cardsToDistribute);
+  //   io.in(roomId).emit("cards distribution", cardsToDistribute);
+  setTimeout(() => {
+    io.in(roomId).emit("cards distribution", cardsToDistribute);
+  }, 100);
 }

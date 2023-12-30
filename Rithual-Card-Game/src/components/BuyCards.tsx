@@ -1,44 +1,46 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Card from "./Cards/Card";
-import { allCards } from "../allCards/cards";
+import { useSocket } from "../context/SocketContext";
 import { useInfluence } from "../context/InfluenceContext";
-import { useDeck } from "../context/DeckContext"; // Import the new useDeck hook
+import { useDeck } from "../context/DeckContext";
 import { CardStructure } from "./Cards/Card";
-
-// gotta remember that when you buy a card it goes to the discart pile
 
 const BuyCards: React.FC = () => {
   const { influence, setInfluence } = useInfluence();
-  const { addCardToDiscardPile, discardPile } = useDeck(); // Use addCardToDeck from DeckContext
+  const { addCardToDiscardPile } = useDeck();
+  const socket = useSocket();
+  const [availableCards, setAvailableCards] = useState<CardStructure[]>([]);
+
+  useEffect(() => {
+    const handleCardsDistribution = (cards: CardStructure[]) => {
+      console.log("Cards received from server:", cards); // This should log the cards received
+      setAvailableCards(cards);
+    };
+
+    socket?.on("cards distribution", handleCardsDistribution);
+
+    return () => {
+      socket?.off("cards distribution", handleCardsDistribution);
+    };
+  }, [socket]);
 
   const buyCard = (card: CardStructure) => {
     if (influence >= card.price) {
-      setInfluence(influence - card.price); // Subtract card price from energy
-      addCardToDiscardPile(card); // Add the card to the deck using DeckContext
-      // You might want to remove the card from the available cards to buy
-      console.log(discardPile);
+      // Correctly type the parameter and ensure the functional update form is allowed
+      setInfluence((currentInfluence: number) => currentInfluence - card.price);
+      addCardToDiscardPile(card);
+      // Remove the card from available cards if needed
+      setAvailableCards((currentCards) =>
+        currentCards.filter((c) => c.name !== card.name)
+      );
     } else {
       alert("Not enough energy to buy this card");
     }
   };
 
-  // i am creating this function to split the card into 5, this is just a front end implementation to control the number of cards, we'll change later
-
-  function shuffleArray(array: any) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-  }
-
-  shuffleArray(allCards);
-  const mixedFirstFive = allCards.slice(0, 5);
-
-  // ----------------------------------------------------------------------------------------------------------------------------------------------
-
   return (
     <section className="relative z-50 flex flex-col gap-3 ml-3 w-fit">
-      {mixedFirstFive.map((card, index) => (
+      {availableCards.map((card, index) => (
         <div
           key={index}
           className="w-[6rem] text-[.55rem]"

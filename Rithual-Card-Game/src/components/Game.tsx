@@ -6,7 +6,7 @@ import EnemysWrapper from "./Enemy'sWorkspace/Enemy'sWrapper";
 import { useSocket } from "../context/SocketContext";
 
 interface GameProps {
-  roomId?: string; // roomId is optional because useParams could return undefined
+  roomId: string; // roomId is optional because useParams could return undefined
 }
 
 const Game: React.FC<GameProps> = ({ roomId }) => {
@@ -29,12 +29,7 @@ const Game: React.FC<GameProps> = ({ roomId }) => {
     <section className="relative w-9/12 h-full pt-3 overflow-hidden rounded-md bg-stone-900">
       <div className="flex flex-col w-full">
         <Battlefield />
-        {isMyTurn ? (
-          <div>Your Turn</div>
-        ) : (
-          <div>Waiting for the other player...</div>
-        )}
-        <EnemysWrapper />
+        <EnemysWrapper isMyTurnProp={isMyTurn} roomId={roomId} />
       </div>
       <BuyCards />
       <YourDeck />

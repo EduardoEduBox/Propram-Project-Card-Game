@@ -1,8 +1,8 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useDrop } from "react-dnd";
 import Card from "../Cards/Card";
 
-const Battlefield = () => {
+const Battlefield: React.FC = () => {
   const ItemTypes = {
     CARD: "card",
   };
