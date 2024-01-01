@@ -1,20 +1,6 @@
 import React from "react";
 import { Tooltip } from "react-tooltip";
-
-export interface CardStructure {
-  id?: number;
-  name: string;
-  illustration: string;
-  damage: number;
-  health: number;
-  price: number;
-  effect?: {
-    name: string;
-    function: () => void;
-    description: string;
-    illustration: string;
-  };
-}
+import { CardStructure } from "../Types";
 
 type CardProps = {
   card: CardStructure;

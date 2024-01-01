@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import YourHand from "./YourHand";
 import { UserAuth } from "../../context/AuthContext";
 import { useInfluence } from "../../context/InfluenceContext";
@@ -10,6 +10,10 @@ const YourDeck: React.FC = () => {
   const { user } = UserAuth();
   const { influence } = useInfluence();
   const { life } = useLife();
+
+  useEffect(() => {
+    console.log("Influence in YourDeck:", influence);
+  }, [influence]);
 
   return (
     <section className="absolute bottom-0 w-full h-[45%]">

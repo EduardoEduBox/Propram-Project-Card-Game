@@ -9,17 +9,17 @@ import { LifeContextProvider } from "./context/LifeContext.tsx";
 import { SocketContextProvider } from "./context/SocketContext.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <SocketContextProvider>
-      <LifeContextProvider>
-        <DeckContextProvider>
-          <InfluenceContextProvider>
+  <InfluenceContextProvider>
+    <React.StrictMode>
+      <SocketContextProvider>
+        <LifeContextProvider>
+          <DeckContextProvider>
             <AuthContextProvider>
               <App />
             </AuthContextProvider>
-          </InfluenceContextProvider>
-        </DeckContextProvider>
-      </LifeContextProvider>
-    </SocketContextProvider>
-  </React.StrictMode>
+          </DeckContextProvider>
+        </LifeContextProvider>
+      </SocketContextProvider>
+    </React.StrictMode>
+  </InfluenceContextProvider>
 );

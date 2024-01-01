@@ -21,7 +21,7 @@ export const handleJoinRoom = (socket, io, activeRooms) => {
       socket.join(roomId);
 
       if (activeRooms[roomId].occupants === 2) {
-        startGameAndDistributeCards(io, roomId);
+        startGameAndDistributeCards(io, roomId, activeRooms);
         initializeTurnLogic(roomId, activeRooms, io);
 
         socket.on("send user photo", ({ roomId, photoURL }) => {

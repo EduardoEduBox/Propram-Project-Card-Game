@@ -1,18 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { allCards } from "../../allCards/cards";
-import { CardStructure } from "../Cards/Card";
 import CardComponent from "../Cards/CardComponent";
 import { useDeck } from "../../context/DeckContext";
 
 const YourHand: React.FC = () => {
-  const [hand, setHand] = useState<CardStructure[]>([]);
   const handRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const initialHand = allCards.sort(() => 0.5 - Math.random()).slice(0, 5);
-    setHand(initialHand);
-  }, []);
+  const { hand } = useDeck();
 
   useEffect(() => {
     const handElement = handRef.current;
@@ -21,6 +14,8 @@ const YourHand: React.FC = () => {
       const spreadAmount = 142;
 
       const handleMouseOver = () => {
+        console.log(cards);
+
         gsap.to(cards, {
           x: (i) => i * spreadAmount,
           rotate: (i) => i * 2,

@@ -12,19 +12,21 @@ function shuffleArray(array) {
   }
 }
 
-// Function to start the game and distribute cards
-export function startGameAndDistributeCards(io, roomId) {
-  // Shuffle the combined deck each time to ensure randomness
+// Function to start the game, distribute cards for buying, and initial hand
+export function startGameAndDistributeCards(io, roomId, activeRooms) {
+  // Shuffle the combined deck for randomness
   shuffleArray(combinedDeck);
 
-  // Take the first 5 cards/spells after shuffling
-  const cardsToDistribute = combinedDeck.slice(0, 5);
-
-  console.log(`Distributing cards to room ${roomId}:`, cardsToDistribute); // Log the cards being distributed
-
-  // Emit the cards to both players in the room
-  //   io.in(roomId).emit("cards distribution", cardsToDistribute);
+  // Distribute cards for buying
+  const cardsToBuy = combinedDeck.slice(0, 5);
   setTimeout(() => {
-    io.in(roomId).emit("cards distribution", cardsToDistribute);
+    io.in(roomId).emit("cards distribution", cardsToBuy);
   }, 100);
+
+  // Distribute initial hand to each player
+  const initialHandSize = 5;
+  activeRooms[roomId].players.forEach((playerSocketId) => {
+    const initialHand = combinedDeck.slice(5, 5 + initialHandSize); // Get next set of cards
+    io.to(playerSocketId).emit("initial hand", initialHand);
+  });
 }

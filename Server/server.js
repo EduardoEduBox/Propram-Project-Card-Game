@@ -2,7 +2,7 @@ import { Server } from "socket.io";
 import { instrument } from "@socket.io/admin-ui";
 import { handleChatMessage } from "./socketHandlers/chatMessages.js";
 import { handleCreateRoom, handleJoinRoom } from "./socketHandlers/rooms.js";
-import { handleInfluence } from "./socketHandlers/influenceHandler.js";
+import { handleBattlefieldUpdates } from "./socketHandlers/battlefieldHandler.js";
 
 const io = new Server(3000, {
   cors: {
@@ -29,8 +29,8 @@ io.on("connection", (socket) => {
   handleCreateRoom(socket, io, activeRooms);
   handleJoinRoom(socket, io, activeRooms);
 
-  // handle influence
-  handleInfluence(socket, activeRooms);
+  // handle battlefield updates
+  handleBattlefieldUpdates(socket);
 
   // handle game logic by implementing the turns for each player using socket.io
   socket.on("turn", (turn) => {

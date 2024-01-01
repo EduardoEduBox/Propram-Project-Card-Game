@@ -5,7 +5,7 @@ import { UserAuth } from "../../context/AuthContext";
 
 // Defining the type for the props
 interface EnemysProfileProps {
-  roomId: string;
+  roomId: string | undefined;
   isMyTurnProp: boolean;
 }
 

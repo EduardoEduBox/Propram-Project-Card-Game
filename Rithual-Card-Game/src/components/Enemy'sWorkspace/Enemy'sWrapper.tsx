@@ -4,7 +4,7 @@ import EnemysBattlefield from "./Enemy'sBattlefield";
 
 type isMyTurnType = {
   isMyTurnProp: boolean;
-  roomId: string;
+  roomId: string | undefined;
 };
 
 const EnemysWrapper: React.FC<isMyTurnType> = ({ isMyTurnProp, roomId }) => {

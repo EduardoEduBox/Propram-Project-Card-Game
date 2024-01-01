@@ -3,7 +3,7 @@ import Card from "./Cards/Card";
 import { useSocket } from "../context/SocketContext";
 import { useInfluence } from "../context/InfluenceContext";
 import { useDeck } from "../context/DeckContext";
-import { CardStructure } from "./Cards/Card";
+import { CardStructure } from "../components/Types";
 
 const BuyCards: React.FC = () => {
   const { influence, setInfluence } = useInfluence();

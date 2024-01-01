@@ -1,5 +1,13 @@
-import { createContext, useContext, useState, ReactNode, FC } from "react";
-import { CardStructure } from "../components/Cards/Card";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  FC,
+  useEffect,
+} from "react";
+import { CardStructure } from "../components/Types";
+import { useSocket } from "./SocketContext";
 
 // Define the structure for the Deck context state
 interface DeckContextProps {
@@ -8,9 +16,9 @@ interface DeckContextProps {
   placedCards: CardStructure[];
   setPlacedCards: (placedCards: CardStructure[]) => void;
   hand: CardStructure[];
-  addCardToHand: (newCard: CardStructure) => void;
+  addCardToHand: (newCards: CardStructure[]) => void;
   addCardToPlacedCards: (newCard: CardStructure) => void;
-  playCardFromHand: (cardIndex: number) => void; // Add this function to the context props
+  playCardFromHand: (index: number) => void;
   addCardToDiscardPile: (newCard: CardStructure) => void;
 }
 
@@ -29,6 +37,23 @@ export const DeckContextProvider: FC<DeckContextProviderProps> = ({
   const [discardPile, setDiscardPile] = useState<CardStructure[]>([]);
   const [placedCards, setPlacedCards] = useState<CardStructure[]>([]);
   const [hand, setHand] = useState<CardStructure[]>([]);
+  const socket = useSocket();
+
+  useEffect(() => {
+    const handleInitialHand = (cards: CardStructure[]) => {
+      setHand(cards);
+    };
+
+    socket?.on("initial hand", handleInitialHand);
+
+    return () => {
+      socket?.off("initial hand", handleInitialHand);
+    };
+  }, [socket]);
+
+  const addCardToHand = (newCards: CardStructure[]) => {
+    setHand((prevHand) => [...prevHand, ...newCards]);
+  };
 
   const addCardToDiscardPile = (newCard: CardStructure) => {
     setDiscardPile((prevHand) => [...prevHand, newCard]);
@@ -38,17 +63,11 @@ export const DeckContextProvider: FC<DeckContextProviderProps> = ({
     setPlacedCards((prevPlacedCards) => [...prevPlacedCards, newCard]);
   };
 
-  const addCardToHand = (newCard: CardStructure) => {
-    setHand((prevHand) => [...prevHand, newCard]);
-  };
-
-  // Remove a card from hand and add it to discard pile
   const playCardFromHand = (cardIndex: number) => {
     setHand((prevHand) => {
-      const newHand = [...prevHand];
-      const playedCard = newHand.splice(cardIndex, 1)[0]; // Remove the card from the hand
-      setDiscardPile((prevDiscardPile) => [...prevDiscardPile, playedCard]); // Add the card to the discard pile
-      return newHand; // Return the new hand without the played card
+      // Create a new array without the card that was played
+      const newHand = prevHand.filter((_, index) => index !== cardIndex);
+      return newHand;
     });
   };
 
@@ -62,7 +81,7 @@ export const DeckContextProvider: FC<DeckContextProviderProps> = ({
         hand,
         addCardToHand,
         addCardToPlacedCards,
-        playCardFromHand, // Add this function to the context value
+        playCardFromHand,
         addCardToDiscardPile,
       }}
     >
