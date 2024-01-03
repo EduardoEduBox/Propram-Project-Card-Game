@@ -9,9 +9,10 @@ import { CardStructure, CardItem } from "../Types";
 
 type roomIdProp = {
   roomId: string | undefined;
+  isMyTurn: boolean;
 };
 
-const Battlefield: React.FC<roomIdProp> = ({ roomId }) => {
+const Battlefield: React.FC<roomIdProp> = ({ roomId, isMyTurn }) => {
   const socket = useSocket();
 
   const { hand, playCardFromHand } = useDeck();
@@ -50,6 +51,10 @@ const Battlefield: React.FC<roomIdProp> = ({ roomId }) => {
   ]);
 
   const handleCardDrop = (item: CardItem) => {
+    // if (!isMyTurn) {
+    //   alert("It's not your turn");
+    //   return;
+    // }
     const card: CardStructure = hand[item.index];
 
     if (card.effect && card.effect.name === "Influence") {

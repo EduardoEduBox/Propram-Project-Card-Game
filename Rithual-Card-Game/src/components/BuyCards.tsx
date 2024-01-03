@@ -5,15 +5,21 @@ import { useInfluence } from "../context/InfluenceContext";
 import { useDeck } from "../context/DeckContext";
 import { CardStructure } from "../components/Types";
 
-const BuyCards: React.FC = () => {
+interface BuyCardsProps {
+  roomId: string | undefined; // roomId is optional because useParams could return undefined
+  isMyTurn: boolean;
+}
+
+const BuyCards: React.FC<BuyCardsProps> = ({ roomId, isMyTurn }) => {
   const { influence, setInfluence } = useInfluence();
   const { addCardToDiscardPile } = useDeck();
   const socket = useSocket();
   const [availableCards, setAvailableCards] = useState<CardStructure[]>([]);
 
+  // Inside your BuyCards component
   useEffect(() => {
     const handleCardsDistribution = (cards: CardStructure[]) => {
-      console.log("Cards received from server:", cards); // This should log the cards received
+      console.log("Cards received from server:", cards);
       setAvailableCards(cards);
     };
 
@@ -24,17 +30,25 @@ const BuyCards: React.FC = () => {
     };
   }, [socket]);
 
-  const buyCard = (card: CardStructure) => {
-    if (influence >= card.price) {
-      // Correctly type the parameter and ensure the functional update form is allowed
-      setInfluence((currentInfluence: number) => currentInfluence - card.price);
-      addCardToDiscardPile(card);
-      // Remove the card from available cards if needed
-      setAvailableCards((currentCards) =>
-        currentCards.filter((c) => c.name !== card.name)
-      );
+  const buyCard = (card: CardStructure, index: number) => {
+    if (isMyTurn) {
+      if (influence >= card.price) {
+        setInfluence(
+          (currentInfluence: number) => currentInfluence - card.price
+        );
+        addCardToDiscardPile(card);
+        // Remove only the bought card from available cards
+        setAvailableCards((currentCards) =>
+          currentCards.filter((_, cardIndex) => cardIndex !== index)
+        );
+
+        // Emit an event to update the available cards for all players
+        socket?.emit("buy card", { roomId, cardIndex: index });
+      } else {
+        alert("Not enough influence to buy this card");
+      }
     } else {
-      alert("Not enough energy to buy this card");
+      alert("It's not your turn");
     }
   };
 
@@ -44,7 +58,7 @@ const BuyCards: React.FC = () => {
         <div
           key={index}
           className="w-[6rem] text-[.55rem]"
-          onClick={() => buyCard(card)}
+          onClick={() => buyCard(card, index)} // Pass 'index' here
         >
           <Card card={card} />
         </div>

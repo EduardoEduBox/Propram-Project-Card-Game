@@ -1,4 +1,4 @@
-import {
+import React, {
   createContext,
   useContext,
   useState,
@@ -9,7 +9,6 @@ import {
 import { CardStructure } from "../components/Types";
 import { useSocket } from "./SocketContext";
 
-// Define the structure for the Deck context state
 interface DeckContextProps {
   discardPile: CardStructure[];
   setDiscardPile: (discardPile: CardStructure[]) => void;
@@ -20,24 +19,54 @@ interface DeckContextProps {
   addCardToPlacedCards: (newCard: CardStructure) => void;
   playCardFromHand: (index: number) => void;
   addCardToDiscardPile: (newCard: CardStructure) => void;
+  yourCardsPile: CardStructure[];
+  shuffleDiscardPile: () => void;
+  shuffleDiscardPileIntoYourCards: () => void;
+  drawCardsFromYourCardsPile: (numberOfCards: number) => void;
 }
 
-// Create the Deck context
 const DeckContext = createContext<DeckContextProps | undefined>(undefined);
 
-// Define the props for the provider
 interface DeckContextProviderProps {
   children: ReactNode;
 }
 
-// Create the provider component
 export const DeckContextProvider: FC<DeckContextProviderProps> = ({
   children,
 }) => {
   const [discardPile, setDiscardPile] = useState<CardStructure[]>([]);
   const [placedCards, setPlacedCards] = useState<CardStructure[]>([]);
   const [hand, setHand] = useState<CardStructure[]>([]);
+  const [yourCardsPile, setYourCardsPile] = useState<CardStructure[]>([]);
   const socket = useSocket();
+
+  const shuffleArray = (array: CardStructure[]) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  };
+
+  const shuffleDiscardPile = () => {
+    let shuffledPile = [...discardPile];
+    shuffleArray(shuffledPile);
+    setYourCardsPile(shuffledPile);
+    setDiscardPile([]);
+  };
+
+  const drawCardsFromYourCardsPile = () => {
+    const numberOfCards = 5;
+    const drawnCards = yourCardsPile.slice(0, numberOfCards);
+    const remainingCards = yourCardsPile.slice(numberOfCards);
+    setHand((prevHand) => [...prevHand, ...drawnCards]);
+    setYourCardsPile(remainingCards);
+  };
+
+  const shuffleDiscardPileIntoYourCards = () => {
+    // Your implementation here
+    // Example: shuffle the discard pile and move it to yourCardsPile
+    shuffleDiscardPile();
+  };
 
   useEffect(() => {
     const handleInitialHand = (cards: CardStructure[]) => {
@@ -56,7 +85,7 @@ export const DeckContextProvider: FC<DeckContextProviderProps> = ({
   };
 
   const addCardToDiscardPile = (newCard: CardStructure) => {
-    setDiscardPile((prevHand) => [...prevHand, newCard]);
+    setDiscardPile((prevDiscardPile) => [...prevDiscardPile, newCard]);
   };
 
   const addCardToPlacedCards = (newCard: CardStructure) => {
@@ -64,11 +93,7 @@ export const DeckContextProvider: FC<DeckContextProviderProps> = ({
   };
 
   const playCardFromHand = (cardIndex: number) => {
-    setHand((prevHand) => {
-      // Create a new array without the card that was played
-      const newHand = prevHand.filter((_, index) => index !== cardIndex);
-      return newHand;
-    });
+    setHand((prevHand) => prevHand.filter((_, index) => index !== cardIndex));
   };
 
   return (
@@ -83,6 +108,10 @@ export const DeckContextProvider: FC<DeckContextProviderProps> = ({
         addCardToPlacedCards,
         playCardFromHand,
         addCardToDiscardPile,
+        yourCardsPile,
+        shuffleDiscardPile,
+        drawCardsFromYourCardsPile,
+        shuffleDiscardPileIntoYourCards, // Add this function to the context
       }}
     >
       {children}
@@ -90,7 +119,6 @@ export const DeckContextProvider: FC<DeckContextProviderProps> = ({
   );
 };
 
-// Hook to use the Deck context
 export const useDeck = () => {
   const context = useContext(DeckContext);
   if (!context) {

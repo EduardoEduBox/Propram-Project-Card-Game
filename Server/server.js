@@ -4,6 +4,7 @@ import { handleChatMessage } from "./socketHandlers/chatMessages.js";
 import { handleCreateRoom, handleJoinRoom } from "./socketHandlers/rooms.js";
 import { handleBattlefieldUpdates } from "./socketHandlers/battlefieldHandler.js";
 import { attackOpponent } from "./socketHandlers/lifeHandler.js";
+import { updateAvailableCardsAfterPurchase } from "./allCards/shuffledCards.js";
 
 const io = new Server(3000, {
   cors: {
@@ -36,6 +37,13 @@ io.on("connection", (socket) => {
   socket.on("attack opponent", ({ roomId, attackerId, attackValue }) => {
     console.log("Attack event received", { roomId, attackerId, attackValue });
     attackOpponent(io, roomId, attackerId, attackValue);
+  });
+
+  // In your socket.io setup where you handle connections
+  // You would call this function in your socket event listener for 'buy card'
+  // Example in your server setup where you handle socket events:
+  socket.on("buy card", ({ roomId, cardIndex }) => {
+    updateAvailableCardsAfterPurchase(io, roomId, cardIndex);
   });
 
   // handle game logic by implementing the turns for each player using socket.io

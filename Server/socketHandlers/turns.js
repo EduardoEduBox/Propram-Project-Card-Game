@@ -24,5 +24,5 @@ export function initializeTurnLogic(roomId, activeRooms, io) {
       console.error(`Players not found for room ID: ${roomId}`);
       clearInterval(activeRooms[roomId].turnTimer); // Stop the interval if there are no players
     }
-  }, 60000); // Switch turn every 60 seconds
+  }, 25000); // Switch turn every 60 seconds
 }

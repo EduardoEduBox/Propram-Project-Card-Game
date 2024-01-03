@@ -19,8 +19,7 @@ const YourDiscartPile: React.FC = () => {
               zIndex: index, // Ensure cards stack correctly
             }}
           >
-            BACK OF THE CARD <br />
-            <span className="opacity-70">{card.name}</span>
+            BACK OF THE CARD
           </div>
         );
       })}
