@@ -28,10 +28,13 @@ const Battlefield: React.FC<roomIdProp> = ({ roomId }) => {
 
       const attackValue = selectedCard.damage;
       const diceRoll = Math.floor(Math.random() * 20) + 1;
+      // Assume that 'socket' is the socket instance and 'roomId' is already defined
       socket?.emit("attack opponent", {
-        roomId,
+        roomId: roomId,
+        attackerId: socket.id, // make sure this is correct
         attackValue: attackValue + diceRoll,
       });
+
       setSelectedCard(null); // Reset selected card
     }
   };

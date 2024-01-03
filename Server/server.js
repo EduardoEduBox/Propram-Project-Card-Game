@@ -34,7 +34,7 @@ io.on("connection", (socket) => {
   handleBattlefieldUpdates(socket);
 
   socket.on("attack opponent", ({ roomId, attackerId, attackValue }) => {
-    console.log("attack worked");
+    console.log("Attack event received", { roomId, attackerId, attackValue });
     attackOpponent(io, roomId, attackerId, attackValue);
   });
 

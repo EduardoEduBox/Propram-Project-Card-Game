@@ -25,9 +25,15 @@ export const handleJoinRoom = (socket, io, activeRooms) => {
       socket.join(roomId);
 
       if (activeRooms[roomId].occupants === 2) {
+        // Assuming activeRooms[roomId].players[0] is player1's ID and activeRooms[roomId].players[1] is player2's ID
+        const player1Id = activeRooms[roomId].players[0];
+        const player2Id = activeRooms[roomId].players[1];
+
         startGameAndDistributeCards(io, roomId, activeRooms);
         initializeTurnLogic(roomId, activeRooms, io);
-        initializePlayerLives(io, roomId, activeRooms[roomId].players);
+
+        // Initialize player lives with specific player IDs
+        initializePlayerLives(io, roomId, player1Id, player2Id);
 
         socket.on("send user photo", ({ roomId, photoURL }) => {
           // Forward the photo URL to the other player in the room
