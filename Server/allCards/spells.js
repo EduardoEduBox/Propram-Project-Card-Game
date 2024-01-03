@@ -25,13 +25,6 @@ export const spells = [
   speakingToTheCrowd,
   speakingToTheCrowd,
   speakingToTheCrowd,
-  speakingToTheCrowd,
-  speakingToTheCrowd,
-  speakingToTheCrowd,
-  speakingToTheCrowd,
-  speakingToTheCrowd,
-  speakingToTheCrowd,
-  speakingToTheCrowd,
   speakingToTheCrowd, // 14
   new Spell(
     "Healing potion",

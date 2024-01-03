@@ -1,14 +1,22 @@
-import { createContext, useContext, useState, ReactNode, FC } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  FC,
+  ReactNode,
+} from "react";
+import { useSocket } from "./SocketContext";
 
 interface LifeContextProps {
   life: number;
-  setLife: (value: number | ((prevVar: number) => number)) => void;
+  setLife: React.Dispatch<React.SetStateAction<number>>;
   fullLife: number;
-  setFullLife: (value: number | ((prevVar: number) => number)) => void;
+  setFullLife: React.Dispatch<React.SetStateAction<number>>;
   enemysLife: number;
-  setEnemysLife: (value: number | ((prevVar: number) => number)) => void;
+  setEnemysLife: React.Dispatch<React.SetStateAction<number>>;
   enemysFullLife: number;
-  setEnemysFullLife: (value: number | ((prevVar: number) => number)) => void;
+  setEnemysFullLife: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const LifeContext = createContext<LifeContextProps | undefined>(undefined);
@@ -17,16 +25,40 @@ interface LifeContextProviderProps {
   children: ReactNode;
 }
 
+interface LifeUpdateEvent {
+  playerId: string;
+  life: number;
+}
+
 export const LifeContextProvider: FC<LifeContextProviderProps> = ({
   children,
 }) => {
   const [life, setLife] = useState<number>(100);
   const [fullLife, setFullLife] = useState<number>(100);
-
-  // for the enemy
-
   const [enemysLife, setEnemysLife] = useState<number>(100);
   const [enemysFullLife, setEnemysFullLife] = useState<number>(100);
+
+  const socket = useSocket();
+
+  useEffect(() => {
+    const handleLifeUpdate = (data: LifeUpdateEvent) => {
+      console.log("Received life update:", data);
+
+      if (data.playerId === socket?.id) {
+        console.log("Updating your life");
+        setLife(data.life);
+      } else {
+        console.log("Updating enemy life");
+        setEnemysLife(data.life);
+      }
+    };
+
+    socket?.on("update life", handleLifeUpdate);
+
+    return () => {
+      socket?.off("update life", handleLifeUpdate);
+    };
+  }, [socket]);
 
   return (
     <LifeContext.Provider

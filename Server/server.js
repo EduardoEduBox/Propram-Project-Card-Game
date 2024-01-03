@@ -3,13 +3,14 @@ import { instrument } from "@socket.io/admin-ui";
 import { handleChatMessage } from "./socketHandlers/chatMessages.js";
 import { handleCreateRoom, handleJoinRoom } from "./socketHandlers/rooms.js";
 import { handleBattlefieldUpdates } from "./socketHandlers/battlefieldHandler.js";
+import { attackOpponent } from "./socketHandlers/lifeHandler.js";
 
 const io = new Server(3000, {
   cors: {
     // origin: ["http://localhost:5173", "https://admin.socket.io"],
     origin: "*", // Allow all origins
     methods: ["GET", "POST"],
-    credentials: true,
+    credentials: false,
   },
 });
 
@@ -31,6 +32,11 @@ io.on("connection", (socket) => {
 
   // handle battlefield updates
   handleBattlefieldUpdates(socket);
+
+  socket.on("attack opponent", ({ roomId, attackerId, attackValue }) => {
+    console.log("attack worked");
+    attackOpponent(io, roomId, attackerId, attackValue);
+  });
 
   // handle game logic by implementing the turns for each player using socket.io
   socket.on("turn", (turn) => {

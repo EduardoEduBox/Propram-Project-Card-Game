@@ -1,10 +1,11 @@
 // roomHandlers.js
 import { startGameAndDistributeCards } from "../allCards/shuffledCards.js";
 import { initializeTurnLogic } from "./turns.js";
+import { initializePlayerLives } from "./lifeHandler.js";
 
 export const handleCreateRoom = (socket, io, activeRooms) => {
   socket.on("create room", () => {
-    const roomId = socket.id;
+    const roomId = socket.id + "-Rithual-Card-Game";
     activeRooms[roomId] = { id: roomId, occupants: 1, players: [socket.id] };
     socket.join(roomId);
     console.log(`Room created: ${roomId}`);
@@ -15,6 +16,9 @@ export const handleCreateRoom = (socket, io, activeRooms) => {
 
 export const handleJoinRoom = (socket, io, activeRooms) => {
   socket.on("join room", (roomId) => {
+    // After both players have joined:
+    console.log(`Both players are in room: ${roomId}`);
+
     if (activeRooms[roomId] && activeRooms[roomId].occupants < 2) {
       activeRooms[roomId].occupants++;
       activeRooms[roomId].players.push(socket.id);
@@ -23,6 +27,7 @@ export const handleJoinRoom = (socket, io, activeRooms) => {
       if (activeRooms[roomId].occupants === 2) {
         startGameAndDistributeCards(io, roomId, activeRooms);
         initializeTurnLogic(roomId, activeRooms, io);
+        initializePlayerLives(io, roomId, activeRooms[roomId].players);
 
         socket.on("send user photo", ({ roomId, photoURL }) => {
           // Forward the photo URL to the other player in the room

@@ -4,8 +4,8 @@ import { useDrop } from "react-dnd";
 import CardComponent from "../Cards/CardComponent";
 import { useDeck } from "../../context/DeckContext";
 import { useInfluence } from "../../context/InfluenceContext";
-import { CardStructure, CardItem } from "../Types";
 import { useSocket } from "../../context/SocketContext";
+import { CardStructure, CardItem } from "../Types";
 
 type roomIdProp = {
   roomId: string | undefined;
@@ -13,10 +13,31 @@ type roomIdProp = {
 
 const Battlefield: React.FC<roomIdProp> = ({ roomId }) => {
   const socket = useSocket();
-  const ItemTypes = { CARD: "card" };
-  const { hand, playCardFromHand } = useDeck();
-  const { setInfluence, influence } = useInfluence();
 
+  const { hand, playCardFromHand } = useDeck();
+
+  const [selectedCard, setSelectedCard] = useState<CardStructure | null>(null);
+
+  const handleCardClick = (card: CardStructure) => {
+    setSelectedCard(card);
+  };
+
+  const handleAttack = () => {
+    if (selectedCard && roomId) {
+      console.log("Attacking opponent with card:", selectedCard);
+
+      const attackValue = selectedCard.damage;
+      const diceRoll = Math.floor(Math.random() * 20) + 1;
+      socket?.emit("attack opponent", {
+        roomId,
+        attackValue: attackValue + diceRoll,
+      });
+      setSelectedCard(null); // Reset selected card
+    }
+  };
+
+  const { setInfluence, influence } = useInfluence();
+  const ItemTypes = { CARD: "card" };
   const [slots, setSlots] = useState<Array<CardStructure | null>>([
     null,
     null,
@@ -70,6 +91,8 @@ const Battlefield: React.FC<roomIdProp> = ({ roomId }) => {
       // Logic for non-spell cards
       if (typeof item.slotIndex === "number") {
         // Emit the card placement to the server
+        // Emit the card placement to the server
+        console.log("Emitting card placement to roomId:", roomId);
         socket?.emit("place card on battlefield", {
           roomId,
           card,
@@ -95,6 +118,7 @@ const Battlefield: React.FC<roomIdProp> = ({ roomId }) => {
       <div
         key={index}
         ref={drop}
+        onClick={() => slot && handleCardClick(slot)}
         className="relative flex items-center justify-center text-xs rounded h-4/6 aspect-5/7 bg-stone-800"
       >
         {slot && <CardComponent card={slot} />}
@@ -105,6 +129,16 @@ const Battlefield: React.FC<roomIdProp> = ({ roomId }) => {
   return (
     <div className="battlefield w-full flex justify-center gap-4 absolute h-[35%] border-t bottom-[20%] pt-5">
       {slotComponents}
+      {selectedCard && (
+        <div className="absolute flex items-center justify-center gap-5 p-5 bg-stone-900">
+          <button onClick={handleAttack} className="text-red-600">
+            Attack Opponent
+          </button>
+          <button onClick={() => setSelectedCard(null)} className="text-3xl">
+            x
+          </button>
+        </div>
+      )}
     </div>
   );
 };

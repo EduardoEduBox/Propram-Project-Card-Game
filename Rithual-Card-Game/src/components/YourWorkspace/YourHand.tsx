@@ -14,8 +14,6 @@ const YourHand: React.FC = () => {
       const spreadAmount = 142;
 
       const handleMouseOver = () => {
-        console.log(cards);
-
         gsap.to(cards, {
           x: (i) => i * spreadAmount,
           rotate: (i) => i * 2,
